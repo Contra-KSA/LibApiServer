@@ -11,6 +11,7 @@ public class InfoController {
 
     @GetMapping(value = "/info")
     public ModelAndView info() {
+        System.out.println("Controller on wire :)");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/info.jsp");
         modelAndView.addObject("title", "Welcome to IT-Library!");

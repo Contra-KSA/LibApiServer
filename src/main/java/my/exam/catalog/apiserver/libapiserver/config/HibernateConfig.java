@@ -3,8 +3,10 @@ package my.exam.catalog.apiserver.libapiserver.config;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Properties;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -16,13 +18,21 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @EnableJpaRepositories("my.exam.catalog.apiserver.libapiserver")
 public class HibernateConfig {
+
+    @Autowired
+    private Environment environment;
+
+    private String getUrlFromCustomizing(){
+        return environment.getProperty("spring.datasource.url");
+    }
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/CATALOG?serverTimezone=UTC");
-        dataSource.setUsername("root");
-        dataSource.setPassword("password");
+        dataSource.setUrl(getUrlFromCustomizing());
+        dataSource.setUsername(environment.getProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getProperty("spring.datasource.password"));
         return dataSource;
     }
 
