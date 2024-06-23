@@ -41,6 +41,7 @@ public class CatalogService {
     }
 
     public void delete(Long id){
+//        bookRepo.
     }
 
     public List<BookDTO> read(List<Long> idList){
@@ -54,5 +55,17 @@ public class CatalogService {
 
     public List<BookDTO> getAll() {
         return bookMapper.toListDTO(bookRepo.findAll());
+    }
+
+    public Optional<List<BookDTO>> findByTitleContaining(String title){
+        List<BookEntity> entities = bookRepo.findByTitleContaining(title);
+        return entities.isEmpty() ? Optional.empty()
+                : Optional.ofNullable(bookMapper.toListDTO(entities));
+    }
+
+    public Optional<List<BookDTO>> findByYear(Integer year){
+        List<BookEntity> entities = bookRepo.findByYearEquals(year);
+        return entities.isEmpty() ? Optional.empty()
+                : Optional.ofNullable(bookMapper.toListDTO(entities));
     }
 }

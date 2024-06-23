@@ -57,7 +57,23 @@ public class CatalogApiController {
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAll(){
         Optional<List<BookDTO>> dtos = Optional.ofNullable(catalogService.getAll());
-        return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<BookDTO>> searchByTitleContaining(
+            @RequestParam(value = "title", required = false ) String title,
+            @RequestParam(value = "year", required = false ) Integer year
+    ){
+        Optional<List<BookDTO>> dtosByTitle = catalogService.findByTitleContaining(title);
+        Optional<List<BookDTO>> dtos = catalogService.findByYear(year);
+        if(dtosByTitle.isPresent()){
+            List<BookDTO> dtoList= dtosByTitle.get();
+            dtoList.addAll(dtos.get());
+            return ResponseEntity.ok(dtoList);
+        }else{
+            return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+        }
     }
 
 }
