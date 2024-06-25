@@ -10,6 +10,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -63,4 +64,22 @@ public class AuthorEntity {
         this.lastName = lastName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AuthorEntity author = (AuthorEntity) o;
+        return Objects.equals(firstName.toUpperCase(), author.firstName.toUpperCase())
+                && Objects.equals(middleName.toUpperCase(), author.middleName.toUpperCase())
+                && Objects.equals(lastName.toUpperCase(), author.lastName.toUpperCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName.toUpperCase(), middleName.toUpperCase(), lastName.toUpperCase());
+    }
 }
