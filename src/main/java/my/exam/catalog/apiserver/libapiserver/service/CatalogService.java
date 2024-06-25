@@ -1,11 +1,13 @@
 package my.exam.catalog.apiserver.libapiserver.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import my.exam.catalog.apiserver.libapiserver.dto.BookDTO;
+import my.exam.catalog.apiserver.libapiserver.entity.AuthorEntity;
 import my.exam.catalog.apiserver.libapiserver.entity.BookEntity;
 import my.exam.catalog.apiserver.libapiserver.mapper.BookMapper;
 import my.exam.catalog.apiserver.libapiserver.repository.AuthorRepository;
@@ -33,7 +35,13 @@ public class CatalogService {
     @Transactional
     public BookDTO create(BookDTO dto){
         BookEntity entity = bookMapper.toEntity(dto);
-        bookRepo.save(entity);
+        List<AuthorEntity> authorEntities = entity.getAuthors();
+        BookEntity createdBook = bookRepo.save(entity);
+        for ( AuthorEntity author : authorEntities ){
+            author = authorRepo.save(author);
+        }
+        createdBook.setAuthors(authorEntities);
+        bookRepo.save(createdBook);
         return bookMapper.toDTO(entity);
     }
 

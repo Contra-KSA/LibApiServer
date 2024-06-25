@@ -1,11 +1,15 @@
 package my.exam.catalog.apiserver.libapiserver.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +30,12 @@ public class BookEntity {
     private String title;
     private int year;
     private String isbn;
-//    @ManyToMany
-//    private List<AuthorEntity> authors;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "book_author",
+            joinColumns = { @JoinColumn(name = "book_id") },
+            inverseJoinColumns = { @JoinColumn(name = "author_id") } )
+    private List<AuthorEntity> authors = new ArrayList<>();
 
     public void setId(Long id) {
         this.id = id;
@@ -45,9 +53,9 @@ public class BookEntity {
         this.isbn = isbn;
     }
 
-//    public void setAuthors(List<AuthorEntity> authors) {
-//        this.authors = authors;
-//    }
+    public void setAuthors(List<AuthorEntity> authors) {
+        this.authors = authors;
+    }
 
     public Long getId() {
         return id;
@@ -65,7 +73,12 @@ public class BookEntity {
         return isbn;
     }
 
-//    public List<AuthorEntity> getAuthors() {
-//        return authors;
-//    }
+    public List<AuthorEntity> getAuthors() {
+        return authors;
+    }
+
+    public List<AuthorEntity> addAuthor(AuthorEntity author){
+        authors.add(author);
+        return authors;
+    }
 }

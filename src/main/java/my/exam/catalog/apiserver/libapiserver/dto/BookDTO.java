@@ -54,4 +54,9 @@ public class BookDTO {
     public List<AuthorEntity> getAuthors() {
         return authors;
     }
+
+    public List<AuthorEntity> addAuthor(AuthorEntity author){
+        authors.add(author);
+        return authors;
+    }
 }

@@ -1,13 +1,16 @@
 package my.exam.catalog.apiserver.libapiserver.controller;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import my.exam.catalog.apiserver.libapiserver.dto.AuthorDTO;
 import my.exam.catalog.apiserver.libapiserver.dto.BookDTO;
 import my.exam.catalog.apiserver.libapiserver.entity.BookEntity;
 import my.exam.catalog.apiserver.libapiserver.mapper.BookMapper;
+import my.exam.catalog.apiserver.libapiserver.service.AuthorService;
 import my.exam.catalog.apiserver.libapiserver.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,6 +32,8 @@ public class CatalogApiController {
 
     @Autowired
     private CatalogService catalogService;
+    @Autowired
+    private AuthorService authorService;
     @Autowired
     private BookMapper bookMapper;
 
@@ -74,6 +79,18 @@ public class CatalogApiController {
         }else{
             return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
         }
+    }
+
+    @PostMapping("/author")
+        public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO dto){
+        Optional<AuthorDTO> optionalDto = authorService.create(dto);
+        return optionalDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    @GetMapping("/author/{id}")
+    public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable Long id){
+        return authorService.read(id).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
 }
