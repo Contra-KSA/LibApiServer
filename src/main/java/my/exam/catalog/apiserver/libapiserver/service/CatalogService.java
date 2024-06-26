@@ -64,11 +64,13 @@ public class CatalogService {
     }
 
     public void delete(Long id) {
-//        bookRepo.
+        bookRepo.deleteById(id);
     }
 
-    public List<BookDTO> read(List<Long> idList) {
-        return null;
+    public Optional<List<BookDTO>> read(List<Long> idList) {
+        List<BookEntity> books = bookRepo.findAllById(idList);
+        return ( books == null || books.isEmpty() ) ? Optional.empty()
+                : Optional.of(bookMapper.toListDTO(books));
     }
 
     public Optional<BookDTO> read(Long id) {
@@ -76,8 +78,8 @@ public class CatalogService {
         return optionalEntity.map(bookEntity -> bookMapper.toDTO(bookEntity));
     }
 
-    public List<BookDTO> getAll() {
-        return bookMapper.toListDTO(bookRepo.findAll());
+    public Optional<List<BookDTO>> getAll() {
+        return Optional.ofNullable(bookMapper.toListDTO(bookRepo.findAll()));
     }
 
     public Optional<List<BookDTO>> findByTitleContaining(String title) {

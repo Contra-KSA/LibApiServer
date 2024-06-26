@@ -61,7 +61,7 @@ public class CatalogApiController {
 
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAll(){
-        Optional<List<BookDTO>> dtos = Optional.ofNullable(catalogService.getAll());
+        Optional<List<BookDTO>> dtos = catalogService.getAll();
         return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
@@ -79,18 +79,6 @@ public class CatalogApiController {
         }else{
             return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
         }
-    }
-
-    @PostMapping("/author")
-        public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO dto){
-        Optional<AuthorDTO> optionalDto = authorService.create(dto);
-        return optionalDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-    }
-
-    @GetMapping("/author/{id}")
-    public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable Long id){
-        return authorService.read(id).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
 }

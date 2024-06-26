@@ -55,6 +55,11 @@ public class AuthorService {
         return null;
     }
 
+    public Optional<List<AuthorDTO>> findAll(){
+        List<AuthorEntity> authors = authorRepository.findAll();
+        return Optional.ofNullable(authorMapper.toListDTO(authors));
+    }
+
     public List<AuthorEntity> checkOrCreateAuthors(List<AuthorEntity> authors) {
         List<AuthorEntity> checkedAuthors = new ArrayList<>();
         for (AuthorEntity author : authors) {
