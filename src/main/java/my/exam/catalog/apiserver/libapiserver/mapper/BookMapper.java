@@ -5,10 +5,7 @@ import java.util.List;
 import my.exam.catalog.apiserver.libapiserver.dto.BookDTO;
 import my.exam.catalog.apiserver.libapiserver.entity.BookEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.ValueMappings;
-import org.mapstruct.ValueMapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

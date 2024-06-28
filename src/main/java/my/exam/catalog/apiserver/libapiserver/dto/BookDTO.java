@@ -2,7 +2,6 @@ package my.exam.catalog.apiserver.libapiserver.dto;
 
 import java.util.List;
 import lombok.Data;
-import lombok.Getter;
 import my.exam.catalog.apiserver.libapiserver.entity.AuthorEntity;
 
 @Data

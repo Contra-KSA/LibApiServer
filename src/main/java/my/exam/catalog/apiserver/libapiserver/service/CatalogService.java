@@ -9,7 +9,6 @@ import my.exam.catalog.apiserver.libapiserver.entity.AuthorEntity;
 import my.exam.catalog.apiserver.libapiserver.entity.BookEntity;
 import my.exam.catalog.apiserver.libapiserver.mapper.AuthorMapper;
 import my.exam.catalog.apiserver.libapiserver.mapper.BookMapper;
-import my.exam.catalog.apiserver.libapiserver.repository.AuthorRepository;
 import my.exam.catalog.apiserver.libapiserver.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +56,7 @@ public class CatalogService {
             entity.setIsbn(dto.getIsbn());
             entity.setYear(dto.getYear());
             entity.setTitle(dto.getTitle());
+//            bookRepo.save(entity);
             return bookMapper.toDTO(entity);
         } else {
             return null;

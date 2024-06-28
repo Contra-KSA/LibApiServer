@@ -1,11 +1,7 @@
 package my.exam.catalog.apiserver.libapiserver.dto;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import java.util.List;
 import lombok.Data;
-import my.exam.catalog.apiserver.libapiserver.entity.BookEntity;
 
 @Data
 public class AuthorDTO {
@@ -13,7 +9,6 @@ public class AuthorDTO {
     private String firstName;
     private String middleName;
     private String lastName;
-    private List<BookDTO> books;
 
     public Long getId() {
         return id;
@@ -47,11 +42,4 @@ public class AuthorDTO {
         this.lastName = lastName;
     }
 
-    public List<BookDTO> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<BookDTO> books) {
-        this.books = books;
-    }
 }
