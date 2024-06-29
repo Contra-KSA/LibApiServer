@@ -92,7 +92,6 @@ public class AuthorService {
             if (!tuples.isEmpty()) {
                 List<BookDTO> linkedBooks = new ArrayList<>();
                 Function<Object, Long> toLong = (obj) -> obj == null ? null : Long.valueOf(obj.toString());
-                List<BookDTO> books = new ArrayList<>();
                 Long book_id;
                 for (Tuple tuple : tuples) {
                     book_id = toLong.apply(tuple.get("book_id"));
