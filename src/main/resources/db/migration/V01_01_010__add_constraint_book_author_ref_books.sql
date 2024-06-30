@@ -1,0 +1,2 @@
+-- alter table book_author
+--     add constraint FK91ierknt446aaqnjl4uxjyls3 foreign key (book_id) references books (id)

@@ -1,0 +1,2 @@
+--
+-- alter table user_roles add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 foreign key (role_id) references roles (id)

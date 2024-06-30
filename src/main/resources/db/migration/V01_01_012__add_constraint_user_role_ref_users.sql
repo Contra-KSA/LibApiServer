@@ -1,0 +1,2 @@
+-- alter table user_roles
+--     add constraint FKcpbpln558xwr5eg987t7jo6gd foreign key (user_id) references users (Id)

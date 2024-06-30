@@ -1,0 +1,1 @@
+insert into auhtors_SEQ values ( 1 )
