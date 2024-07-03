@@ -18,6 +18,7 @@ public class WebConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
             InitialAuthenticationFilter initialAuthenticationFilter,

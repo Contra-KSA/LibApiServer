@@ -3,30 +3,40 @@ package my.exam.catalog.apiserver.libapiserver.service;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import my.exam.catalog.apiserver.libapiserver.config.UsernamePasswordAuthenticationProvider;
 import my.exam.catalog.apiserver.libapiserver.dto.UserDTO;
 import my.exam.catalog.apiserver.libapiserver.entity.UserCustom;
 import my.exam.catalog.apiserver.libapiserver.entity.UserEntity;
 import my.exam.catalog.apiserver.libapiserver.mapper.UserMapper;
 import my.exam.catalog.apiserver.libapiserver.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
+    @Autowired
     private UserMapper mapper;
+    @Autowired
     private UserRepository repo;
 
     public Optional<UserDTO> create(UserDTO dto) {
-//        if (dto == null) {
-//            return Optional.empty();
-//        }
+        if (dto == null) {
+            return Optional.empty();
+        }
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(dto.getPassword());
+        UserEntity userEntity = mapper.toEntity(dto);
+        userEntity.setPassword(hashedPassword);
 //        dto.createPasswordHash();
-//        return Optional.ofNullable(mapper.toDTO(repo.save(mapper.toEntity(dto))));
-        return Optional.empty();
+        return Optional.ofNullable(mapper.toDTO(repo.save(userEntity)));
+//        return Optional.empty();
     }
 
     public Optional<UserDTO> findById(Long id) {

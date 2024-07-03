@@ -1,6 +1,7 @@
 package my.exam.catalog.apiserver.libapiserver.dto;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.Data;
 import my.exam.catalog.apiserver.libapiserver.entity.AuthorEntity;
 
@@ -57,5 +58,23 @@ public class BookDTO {
     public List<AuthorEntity> addAuthor(AuthorEntity author){
         authors.add(author);
         return authors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BookDTO bookDTO = (BookDTO) o;
+        return year == bookDTO.year && Objects.equals(title, bookDTO.title) && Objects.equals(isbn,
+                bookDTO.isbn) && Objects.equals(authors, bookDTO.authors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, year, isbn, authors);
     }
 }

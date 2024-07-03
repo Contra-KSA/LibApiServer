@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Table(name = "users")
 public class UserEntity {
     @Id
@@ -47,5 +46,25 @@ public class UserEntity {
 
     public List<RoleEntity> getRoles() {
         return roles;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

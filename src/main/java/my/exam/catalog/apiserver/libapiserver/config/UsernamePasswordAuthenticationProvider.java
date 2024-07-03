@@ -37,4 +37,8 @@ public class UsernamePasswordAuthenticationProvider {
             throw new BadCredentialsException("Bad credentials");
         }
     }
+
+    public String passwordEncode(String rawPassword){
+        return passwordEncode(rawPassword);
+    }
 }

@@ -1,4 +1,5 @@
 package my.exam.catalog.apiserver.libapiserver.controller;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,9 @@ public class CatalogApiController {
     @Autowired
     private BookMapper bookMapper;
 
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<BookDTO> getById( @PathVariable Long id){
+    public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
         Optional<BookDTO> dto = catalogService.read(id);
         return dto.map(bookEntity -> ResponseEntity.ok(dto.get()))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
@@ -50,7 +52,7 @@ public class CatalogApiController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDto)throws IOException {
+    public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDto) throws IOException {
         Optional<BookDTO> dto = Optional.ofNullable(catalogService.create(bookDto));
         return dto.map(bookEntity -> ResponseEntity.ok(dto.get()))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
@@ -58,7 +60,7 @@ public class CatalogApiController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getAll(){
+    public ResponseEntity<List<BookDTO>> getAll() {
         Optional<List<BookDTO>> dtos = catalogService.getAll();
         return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -66,28 +68,23 @@ public class CatalogApiController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<List<BookDTO>> searchByTitleContaining(
-            @RequestParam(value = "title", required = false ) String title,
-            @RequestParam(value = "year", required = false ) Integer year
-    ){
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "year", required = false) Integer year
+    ) {
         Optional<List<BookDTO>> dtosByTitle = catalogService.findByTitleContaining(title);
         Optional<List<BookDTO>> dtos = catalogService.findByYear(year);
-        if(dtosByTitle.isPresent()){
-            List<BookDTO> dtoList= dtosByTitle.get();
-            dtoList.addAll(dtos.get());
-            return ResponseEntity.ok(dtoList);
-        }else{
-            return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
-        }
+        dtos = catalogService.tuncDubles(dtosByTitle, dtos);
+        return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<BookDTO> delete(@PathVariable Long id){
+    public ResponseEntity<BookDTO> delete(@PathVariable Long id) {
         Optional<BookDTO> optionalBook = catalogService.read(id);
-        if(optionalBook.isPresent()){
+        if (optionalBook.isPresent()) {
             catalogService.delete(id);
             return ResponseEntity.ok(optionalBook.get());
-        }else{
+        } else {
             return ResponseEntity.badRequest().build();
         }
     }

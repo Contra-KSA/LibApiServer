@@ -83,6 +83,9 @@ public class CatalogService {
     }
 
     public Optional<List<BookDTO>> findByTitleContaining(String title) {
+        if(title.isEmpty()){
+            return Optional.empty();
+        }
         List<BookEntity> entities = bookRepo.findByTitleContaining(title);
         return entities.isEmpty() ? Optional.empty()
                 : Optional.ofNullable(bookMapper.toListDTO(entities));
@@ -113,5 +116,20 @@ public class CatalogService {
             }
         }
         return checkedAuthors;
+    }
+
+    public Optional<List<BookDTO>> tuncDubles( Optional<List<BookDTO>> booksOne, Optional<List<BookDTO>> booksTwo){
+        List<BookDTO> result = new ArrayList<>();
+        if(booksOne.isPresent()){
+            result =  booksOne.get();
+            if(booksTwo.isPresent()){
+                result.retainAll(booksTwo.get());
+                return Optional.of(result);
+            }else{
+                return booksOne;
+            }
+        }else{
+            return booksTwo;
+        }
     }
 }
