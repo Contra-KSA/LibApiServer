@@ -36,6 +36,7 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody UserDTO dto) {
         Optional<UserDTO> optionalUser = service.create(dto);

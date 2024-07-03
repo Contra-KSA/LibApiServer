@@ -27,6 +27,7 @@ public class JwtServiceImpl implements JwtService {
     private String signingKey;
     @Value("${jwt.key.expiration}")
     private Long jwtExpiration;
+    @Autowired
     private UserRepository userRepository;
 
 //    public JwtServiceImpl() {

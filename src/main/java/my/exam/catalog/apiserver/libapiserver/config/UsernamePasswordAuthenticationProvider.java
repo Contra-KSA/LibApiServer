@@ -1,6 +1,7 @@
 package my.exam.catalog.apiserver.libapiserver.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,8 +15,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UsernamePasswordAuthenticationProvider {
 
+    @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UsernamePasswordAuthenticationProvider(UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();

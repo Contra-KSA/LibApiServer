@@ -16,6 +16,7 @@ import my.exam.catalog.apiserver.libapiserver.entity.UsernamePasswordAuthenticat
 import my.exam.catalog.apiserver.libapiserver.service.ClaimField;
 import my.exam.catalog.apiserver.libapiserver.service.HeaderValues;
 import my.exam.catalog.apiserver.libapiserver.service.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwtService jwtService;
 
     @Override

@@ -4,14 +4,18 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import my.exam.catalog.apiserver.libapiserver.dto.UserDTO;
+import my.exam.catalog.apiserver.libapiserver.entity.UserCustom;
 import my.exam.catalog.apiserver.libapiserver.entity.UserEntity;
 import my.exam.catalog.apiserver.libapiserver.mapper.UserMapper;
 import my.exam.catalog.apiserver.libapiserver.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private UserMapper mapper;
     private UserRepository repo;
@@ -62,4 +66,9 @@ public class UserService {
 //        }
         return Optional.empty();
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return new UserCustom(repo.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("USER NOT FOUND!")));    }
 }

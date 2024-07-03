@@ -12,11 +12,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserCustom implements UserDetails {
 
     private UserEntity user;
+
+    public UserCustom(UserEntity user) {
+        this.user = user;
+    }
+    public UserCustom() {
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

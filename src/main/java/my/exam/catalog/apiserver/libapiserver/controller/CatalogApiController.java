@@ -10,6 +10,7 @@ import my.exam.catalog.apiserver.libapiserver.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,7 @@ public class CatalogApiController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDto)throws IOException {
         Optional<BookDTO> dto = Optional.ofNullable(catalogService.create(bookDto));
@@ -54,12 +56,14 @@ public class CatalogApiController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAll(){
         Optional<List<BookDTO>> dtos = catalogService.getAll();
         return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<List<BookDTO>> searchByTitleContaining(
             @RequestParam(value = "title", required = false ) String title,
@@ -76,6 +80,7 @@ public class CatalogApiController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<BookDTO> delete(@PathVariable Long id){
         Optional<BookDTO> optionalBook = catalogService.read(id);
