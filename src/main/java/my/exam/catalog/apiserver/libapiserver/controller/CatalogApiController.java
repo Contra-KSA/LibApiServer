@@ -8,6 +8,7 @@ import my.exam.catalog.apiserver.libapiserver.dto.BookDTO;
 import my.exam.catalog.apiserver.libapiserver.mapper.BookMapper;
 import my.exam.catalog.apiserver.libapiserver.service.AuthorService;
 import my.exam.catalog.apiserver.libapiserver.service.CatalogService;
+import my.exam.catalog.apiserver.libapiserver.service.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -74,9 +75,9 @@ public class CatalogApiController {
     ) {
         Optional<List<BookDTO>> dtosByTitle = catalogService.findByTitleContaining(Optional.ofNullable(title));
         Optional<List<BookDTO>> dtos = catalogService.findByYear(year);
-        dtos = catalogService.tuncDubles(dtosByTitle, dtos);
+        dtos = Utils.getIntersectionBooks(dtosByTitle, dtos);
         Optional<List<BookDTO>> dtosByAuthor = catalogService.findByAuthorNameComparingFirstAndLastName(Optional.ofNullable(name));
-        dtos = catalogService.tuncDubles(dtosByAuthor, dtos);
+        dtos = Utils.getIntersectionBooks(dtosByAuthor, dtos);
         return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
