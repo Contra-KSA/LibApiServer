@@ -86,27 +86,57 @@ public class AuthorService {
             answer.setStatus(HttpStatus.BAD_REQUEST);
             answer.setDescription(environment.getProperty("texts.message.no-such-author"));
         }else{
-            List<Tuple> tuples = authorRepository.findBooksIdForAuthor(id);
             AuthorDTO authorDTO = optionalAuthor.get();
             answer.setAuthor(authorDTO);
-            if (!tuples.isEmpty()) {
-                List<BookDTO> linkedBooks = new ArrayList<>();
-                Function<Object, Long> toLong = (obj) -> obj == null ? null : Long.valueOf(obj.toString());
-                Long book_id;
-                for (Tuple tuple : tuples) {
-                    book_id = toLong.apply(tuple.get("book_id"));
-                    Optional<BookDTO> book = catalogService.read(book_id);
-                    book.ifPresent(linkedBooks::add);
-                }
-                answer.setBooks(linkedBooks);
+            Optional<List<BookDTO>> optionalLinkedBooks = getBooksByAuthor(id);
+            if (optionalLinkedBooks.isPresent()){
+                answer.setBooks(optionalLinkedBooks.get());
                 answer.setStatus(HttpStatus.CONFLICT);
                 answer.setDescription(environment.getProperty("texts.message.author-has-linked-books"));
-            } else {
+            }else{
                 authorRepository.delete(authorMapper.toEntity(authorDTO));
                 answer.setStatus(HttpStatus.OK);
                 answer.setDescription(environment.getProperty("texts.message.success-deletetion"));
             }
         }
         return answer;
+    }
+
+    private Optional<List<BookDTO>> getBooksByAuthor(Long id){
+        List<BookDTO> linkedBooks = new ArrayList<>();
+        List<Tuple> tuples = authorRepository.findBooksIdForAuthor(id);
+        if(tuples.isEmpty()){
+            return Optional.empty();
+        }else{
+            Function<Object, Long> toLong = (obj) -> obj == null ? null : Long.valueOf(obj.toString());
+            Long book_id;
+            for (Tuple tuple : tuples) {
+                book_id = toLong.apply(tuple.get("book_id"));
+                Optional<BookDTO> book = catalogService.read(book_id);
+                book.ifPresent(linkedBooks::add);
+            }
+            return Optional.of(linkedBooks);
+        }
+    }
+
+    public Optional<List<BookDTO>> findBooksIdForAuthorByHisName(String firstName, String lastName){
+        List<AuthorEntity> byFirstName = authorRepository.findByFirstNameContaining(firstName);
+        List<AuthorEntity> byLastName = authorRepository.findByLastNameContaining(lastName);
+        Optional<List<AuthorEntity>> optionalAuthors =
+                Utils.getIntersectionAuthors(Optional.ofNullable(byFirstName),
+                Optional.ofNullable(byLastName));
+        if(optionalAuthors.isEmpty()){
+            return Optional.empty();
+        }else{
+            List<AuthorEntity> authors = optionalAuthors.get();
+            Optional<List<BookDTO>> books = Optional.of(new ArrayList<>());
+            for(AuthorEntity author : authors){
+                Optional<List<BookDTO>> optionalBookDTO = getBooksByAuthor(author.getId());
+                if(optionalBookDTO.isPresent()){
+                    books = Utils.getIntersectionBooks(books, optionalBookDTO);
+                }
+            }
+            return books;
+        }
     }
 }

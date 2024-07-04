@@ -25,6 +25,7 @@ public class CatalogService {
     private BookMapper bookMapper;
     @Autowired
     private AuthorService authorService;
+    private Optional<String> name;
 
     public CatalogService(BookRepository bookRepo, BookMapper bookMapper) {
         this.bookRepo = bookRepo;
@@ -82,11 +83,11 @@ public class CatalogService {
         return Optional.ofNullable(bookMapper.toListDTO(bookRepo.findAll()));
     }
 
-    public Optional<List<BookDTO>> findByTitleContaining(String title) {
+    public Optional<List<BookDTO>> findByTitleContaining(Optional<String> title) {
         if(title.isEmpty()){
             return Optional.empty();
         }
-        List<BookEntity> entities = bookRepo.findByTitleContaining(title);
+        List<BookEntity> entities = bookRepo.findByTitleContaining(title.get());
         return entities.isEmpty() ? Optional.empty()
                 : Optional.ofNullable(bookMapper.toListDTO(entities));
     }
@@ -117,6 +118,17 @@ public class CatalogService {
         }
         return checkedAuthors;
     }
+
+
+
+    public Optional<List<BookDTO>> findByAuthorNameComparingFirstAndLastName(Optional<String> name) {
+        if(name.isPresent()) {
+            String pureName = name.get();
+            return authorService.findBooksIdForAuthorByHisName(pureName, pureName);
+        }
+        return Optional.empty();
+    }
+
 
     public Optional<List<BookDTO>> tuncDubles( Optional<List<BookDTO>> booksOne, Optional<List<BookDTO>> booksTwo){
         List<BookDTO> result = new ArrayList<>();

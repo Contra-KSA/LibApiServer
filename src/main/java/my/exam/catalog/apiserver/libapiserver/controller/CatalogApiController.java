@@ -67,13 +67,16 @@ public class CatalogApiController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchByTitleContaining(
+    public ResponseEntity<List<BookDTO>> searchByConditions(
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "year", required = false) Integer year
+            @RequestParam(value = "year", required = false) Integer year,
+            @RequestParam(value = "author", required = false) String name
     ) {
-        Optional<List<BookDTO>> dtosByTitle = catalogService.findByTitleContaining(title);
+        Optional<List<BookDTO>> dtosByTitle = catalogService.findByTitleContaining(Optional.ofNullable(title));
         Optional<List<BookDTO>> dtos = catalogService.findByYear(year);
         dtos = catalogService.tuncDubles(dtosByTitle, dtos);
+        Optional<List<BookDTO>> dtosByAuthor = catalogService.findByAuthorNameComparingFirstAndLastName(Optional.ofNullable(name));
+        dtos = catalogService.tuncDubles(dtosByAuthor, dtos);
         return dtos.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
@@ -88,5 +91,6 @@ public class CatalogApiController {
             return ResponseEntity.badRequest().build();
         }
     }
+
 
 }
