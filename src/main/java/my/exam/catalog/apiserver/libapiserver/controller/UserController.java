@@ -47,7 +47,7 @@ public class UserController {
 //    public ResponseEntity<List<User>> getAllUser() {
 //        return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
 //    }
-@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> findAll() {
         Optional<List<UserDTO>> optionalUsers = service.findAll();

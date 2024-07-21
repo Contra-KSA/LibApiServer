@@ -1,9 +1,6 @@
 package my.exam.catalog.apiserver.libapiserver.entity;
 
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 public class Jwt implements Serializable {
 
